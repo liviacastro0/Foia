@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/login.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+    <title>Login FOIA</title>
+  </head>
+
+  <body>
+    {% extends 'base.html' %}
+
+    {% block title %}
+      Login FOIA
+    {% endblock %}
+
+    {% block content %}
+      <div class="form-container">
+        <div class="logo">
+          <img src="{{ url_for('static', filename='images/foiaverde1.png') }}" alt="Logo FOIA" />
+        </div>
+        <form action="{{ url_for('processar_login') }}" method="POST">
+          <input type="email" id="email" placeholder="e-mail" required />
+          <input type="password" id="senha" placeholder="senha" required />
+          <button class="botao-login" type="submit">ENTRAR</button>
+        </form>
+
+        <div class="rodape">
+          NÃO TEM UMA CONTA? <a href="{{ url_for('criar_conta') }}">CRIAR</a>
+        </div>
+      </div>
+    {% endblock %}
+    {% block scripts %}
+      <script>
+        function redirecionarSePreenchido() {
+          const email = document.getElementById('email').value.trim()
+          const senha = document.getElementById('senha').value.trim()
+        
+          if (email !== '' && senha !== '') {
+            window.location.href = 'chat.html'
+          }
+        
+          return false // Sempre impede envio padrão do formulário
+        }
+      </script>
+    {% endblock %}
+  </body>
+</html>

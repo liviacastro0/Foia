@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recomendações Agrícolas</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style/resposta.css') }}" />
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+ 
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Recomendações para Seu Solo</h1>
+
+    <div class="response-box">
+      <h2> 🌱 Dados do Solo Analisado</h2>
+      <div class="data-grid">
+        <div class="data-column">
+          <p><strong>Nitrogênio (mg/kg):</strong> {{ nitrogenio }}</p>
+          <p><strong>Fósforo (mg/kg):</strong> {{ fosforo }}</p>
+          <p><strong>Potássio (mg/kg):</strong> {{ potassio }}</p>
+        </div>
+        <div class="data-column">
+          <p><strong>Temperatura (°C):</strong> {{ temperatura }}</p>
+          <p><strong>Umidade (%):</strong> {{ umidade }}</p>
+          <p><strong>pH:</strong> {{ ph }}</p>
+          <p><strong>Chuva (mm):</strong> {{ chuva }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="response-box">
+      <h2>🌱 Resultado da Análise</h2>
+      <div class="result-grid">
+        <p><strong>Cultura recomendada:</strong> <span class="main-crop">{{ cultura }}</span></p>
+        <p><strong>Cultura alternativa:</strong> <span class="alt-crop">{{ alternativa }}</span></p>
+      </div>
+    </div>
+
+    <div class="tips-container">
+      <h2 class="tips-title">📌 Dicas de Cultivo</h2>
+
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="showTab('recomendada')">Para {{ cultura }}</button>
+        <button class="tab-button" onclick="showTab('alternativa')">Para {{ alternativa }}</button>
+      </div>
+
+      <div class="tab-content-custom active" id="recomendada">
+        <div id="markdown_recomendada" class="tips-content"></div>
+      </div>
+      <div class="tab-content-custom" id="alternativa">
+        <div id="markdown_alternativa" class="tips-content"></div>
+      </div>
+    </div>
+
+    <a href="{{ url_for('chat') }}" class="back-button">↩ Voltar</a>
+  </div>
+
+  <!-- Script para renderizar Markdown e alternar abas -->
+  <script>
+    const dicasRecomendada = `{{ dicas_recomendada | tojson | safe }}`;
+    const dicasAlternativa = `{{ dicas_alternativa | tojson | safe }}`;
+
+    document.getElementById("markdown_recomendada").innerHTML = marked.parse(dicasRecomendada);
+    document.getElementById("markdown_alternativa").innerHTML = marked.parse(dicasAlternativa);
+
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll(".tab-content-custom");
+      const buttons = document.querySelectorAll(".tab-button");
+
+      tabs.forEach(tab => tab.classList.remove("active"));
+      buttons.forEach(btn => btn.classList.remove("active"));
+
+      document.getElementById(tabId).classList.add("active");
+      event.target.classList.add("active");
+    }
+  </script>
+</body>
+</html>
