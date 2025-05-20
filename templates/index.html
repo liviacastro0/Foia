@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/index.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+    <title>início</title>
+  </head>
+  <body>
+    <div class="conteudo">
+      <img src="{{ url_for('static', filename='images/logofoia.png') }}" alt="Logo FOIA" />
+      <div class="texto">PLANEJAMENTO DE SOLOS</div>
+    </div>
+
+    <a href="{{ url_for('login') }}" class="botao-entrar">Entrar</a>
+  </body>
+</html>

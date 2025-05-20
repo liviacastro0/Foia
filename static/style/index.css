@@ -1,0 +1,57 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('/static/images/img1.jpg');
+    background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
+    overflow: hidden;
+    font-family: sans-serif;
+
+}
+
+.conteudo {
+    position: absolute;
+    top: 57%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.conteudo img {
+    width: 650px;
+    height: auto;
+}
+
+.texto {
+    margin-top: 20px;
+    color: white;
+    font-size: 24px;
+    letter-spacing: 20px;
+}
+
+.botao-entrar {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 12px 24px;
+    background-color: #ffffffcc;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease;
+}
+
+.botao-entrar:hover {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+a {
+    text-decoration: none;
+    color: rgb(6, 96, 24);
+}

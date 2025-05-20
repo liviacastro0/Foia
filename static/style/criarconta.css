@@ -1,0 +1,76 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-image: url("/static/images/fundo3.jpg");
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.form-box {
+  padding: 40px 20px 20px 20px;
+  background-color: white;
+  text-align: center;
+}
+
+h1 {
+  font-size: 48px;
+  color: #2f4f2f;
+  margin-bottom: 20px;
+}
+
+form {
+  max-width: 300px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #2f4f2f;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 2px solid #2f4f2f;
+  border-radius: 5px;
+}
+
+.form-container .rodape a {
+  color: #2f4f2f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+button {
+  width: 100%;
+  background-color: #2f4f2f;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease;
+}

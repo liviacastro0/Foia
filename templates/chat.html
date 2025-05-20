@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/chat.css') }}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/logo.png') }}" type="image/png">
+    <title>Análise de Solo Agrícola</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Análise de Solo Agrícola</h1>
+        
+        <form id="form-solo" action="{{ url_for('resposta') }}" method="GET" onsubmit="return validarCampos()">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="nitrogenio">
+                        Nitrogênio (kg)
+                        <span class="info-icon" title="Valor do nutriente obtido por análise química. Valor inteiro positivo até 80."></span>
+                    </label>
+                    <input type="number" id="nitrogenio" name="nitrogenio" placeholder="Ex: 25" min="0" max="80" maxlength="2" required />
+                    <span class="input-hint">Valor entre 0 e 80</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="fosforo">
+                        Fósforo (kg)
+                        <span class="info-icon" title="Valor do nutriente obtido por análise química. Valor inteiro positivo até 80."></span>
+                    </label>
+                    <input type="number" id="fosforo" name="fosforo" placeholder="Ex: 15" min="0" max="80" maxlength="2" required />
+                    <span class="input-hint">Valor entre 0 e 80</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="potassio">
+                        Potássio (kg)
+                        <span class="info-icon" title="Valor do nutriente obtido por análise química. Valor inteiro positivo até 80."></span>
+                    </label>
+                    <input type="number" id="potassio" name="potassio" placeholder="Ex: 80" min="0" max="80" maxlength="2" required />
+                    <span class="input-hint">Valor entre 0 e 80</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="temperatura">
+                        Temperatura (°C)
+                        <span class="info-icon" title="Temperatura do solo medida com termômetro. Deve estar entre -25°C e 80°C."></span>
+                    </label>
+                    <input type="number" id="temperatura" name="temperatura" placeholder="Ex: 23" min="-25" max="80" maxlength="2" required />
+                    <span class="input-hint">Entre -25°C e 80°C</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="umidade">
+                        Umidade (%)
+                        <span class="info-icon" title="Porcentagem de umidade do solo. Use até duas casas decimais."></span>
+                    </label>
+                    <input type="text" id="umidade" name="umidade" placeholder="Ex: 60,00" maxlength="5" required />
+                    <span class="input-hint">Formato: 00,00</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="ph">
+                        pH
+                        <span class="info-icon" title="Potencial hidrogeniônico do solo (pH). Utilize até duas casas decimais."></span>
+                    </label>
+                    <input type="text" id="ph" name="ph" placeholder="Ex: 6,50" maxlength="5" required />
+                    <span class="input-hint">Escala de 0 a 14</span>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label for="chuva">
+                    Chuva (mm)
+                    <span class="inpu" title="A quantidade de chuva em uma área. Use até três casas decimais."></span>
+                </label>
+                <input type="text" id="chuva" name="chuva" placeholder="Ex: 12,000" maxlength="7" required />
+                <span class="input-hint">A quantidade de chuva em uma área. Use até três casas decimais.</span>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" id="submit-btn">
+                    <span id="btn-text">Analisar Solo</span>
+                    <span class="loading-spinner" id="spinner"></span>
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        function aplicarMascaraComVirgula(campoId, maxValor) {
+            const campo = document.getElementById(campoId)
+            campo.addEventListener('input', function () {
+                let valor = campo.value.replace(',', '').replace(/[^\d]/g, '')
+                if (valor.length > 2) {
+                    valor = valor.slice(0, valor.length - 2) + ',' + valor.slice(-2)
+                }
+                campo.value = valor
+                const valorConvertido = parseFloat(campo.value.replace(',', '.'))
+                if (valorConvertido > maxValor) {
+                    campo.value = maxValor.toFixed(2).replace('.', ',')
+                }
+            })
+        }
+
+        // ✅ NOVA FUNÇÃO mascaraChuva com até 3 casas decimais
+        function mascaraChuva(campoId) {
+            const campo = document.getElementById(campoId);
+            campo.addEventListener('input', function () {
+                let valor = campo.value.replace(/[^\d]/g, '');
+                if (valor.length > 6) valor = valor.slice(0, 6); // Máximo 6 dígitos
+
+                while (valor.length < 4) {
+                    valor = '0' + valor; // Preenche com zeros à esquerda
+                }
+
+                let parteInteira = valor.slice(0, valor.length - 3);
+                let parteDecimal = valor.slice(-3);
+                campo.value = `${parseInt(parteInteira)},${parteDecimal}`;
+            });
+        }
+
+        function limitarValor(campoId, min, max) {
+            const campo = document.getElementById(campoId)
+            campo.addEventListener('input', function () {
+                let valor = parseInt(campo.value)
+                if (isNaN(valor)) return
+                if (valor > max) campo.value = max
+                if (valor < min) campo.value = min
+            })
+        }
+
+        function validarCampos() {
+            const campos = document.querySelectorAll('input[required]')
+            let todosPreenchidos = true
+            
+            for (let campo of campos) {
+                if (!campo.value) {
+                    campo.style.borderColor = 'red'
+                    todosPreenchidos = false
+                } else {
+                    campo.style.borderColor = ''
+                }
+            }
+            
+            if (!todosPreenchidos) {
+                alert('Por favor, preencha todos os campos antes de enviar.')
+                return false
+            }
+            
+            document.getElementById('spinner').style.display = 'inline-block'
+            document.getElementById('btn-text').textContent = 'Processando...'
+            document.getElementById('submit-btn').disabled = true
+            
+            return true
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            aplicarMascaraComVirgula('umidade', 100)
+            aplicarMascaraComVirgula('ph', 14)
+            mascaraChuva('chuva')
+            
+            limitarValor('nitrogenio', 0, 80)
+            limitarValor('fosforo', 0, 80)
+            limitarValor('potassio', 0, 80)
+            limitarValor('temperatura', -25, 80)
+            
+            document.querySelectorAll('input').forEach(input => {
+                input.addEventListener('blur', function() {
+                    if (this.required && !this.value) {
+                        this.style.borderColor = 'red'
+                    } else {
+                        this.style.borderColor = ''
+                    }
+                })
+            })
+        })
+    </script>
+</body>
+</html>
